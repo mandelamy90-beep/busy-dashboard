@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Executive Workstation — Do Not Disturb</title>
+  <style>
+    :root{
+      --bg:#0b1020; --card:#0f1724; --muted:#8b98b4; --accent:#1db954; --glass: rgba(255,255,255,0.04);
+      --glass-2: rgba(255,255,255,0.02);
+    }
+    html,body{height:100%;margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial; background:linear-gradient(180deg,#071029 0%, #07121a 60%); color:#e6eef8}
+    .wrap{display:grid;grid-template-columns: 360px 1fr 360px;grid-template-rows: 120px 1fr;gap:18px;padding:18px;height:100vh;box-sizing:border-box}
+    .header{grid-column:1 / span 3;background:linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:12px;padding:14px;display:flex;align-items:center;justify-content:space-between}
+    .logo{display:flex;gap:12px;align-items:center}
+    .logo .mark{width:48px;height:48px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#2bb3ff);display:flex;align-items:center;justify-content:center;font-weight:700}
+    .title{font-size:18px;font-weight:600}
+    .sub{color:var(--muted);font-size:12px}
+
+    .card{background:linear-gradient(180deg,var(--card), rgba(255,255,255,0.02));padding:14px;border-radius:12px;box-shadow:0 6px 18px rgba(2,6,23,0.6);}
+
+    /* left column */
+    .left{grid-row:2 / span 1;grid-column:1}
+    .right{grid-row:2 / span 1;grid-column:3}
+    .center{grid-row:2 / span 1;grid-column:2}
+
+    .profile{display:flex;align-items:center;gap:12px}
+    .avatar{width:64px;height:64px;border-radius:10px;background:linear-gradient(180deg,#2d394f,#1b2432);display:flex;align-items:center;justify-content:center;font-weight:700}
+    .badges{display:flex;gap:8px;margin-top:12px}
+    .badge{background:var(--glass);padding:6px 8px;border-radius:8px;font-size:12px;color:var(--muted)}
+
+    /* terminal */
+    .terminal{font-family:monospace;background:#01040a;padding:12px;border-radius:8px;height:220px;overflow:auto;color:#cfe8d7}
+    .term-line{opacity:0.95}
+    .cmd{color:#9fe6a4}
+
+    /* analytics */
+    .chart{height:260px}
+    .stat-grid{display:flex;gap:10px;margin-top:8px}
+    .stat{flex:1;background:var(--glass-2);padding:10px;border-radius:8px;text-align:center}
+    .stat .num{font-size:20px;font-weight:700}
+    .stat .label{font-size:12px;color:var(--muted)}
+
+    /* kanban */
+    .kanban{display:flex;gap:10px;overflow:hidden}
+    .col{flex:1;background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);padding:10px;border-radius:8px;min-width:120px}
+    .card-item{background:#071020;padding:8px;margin-bottom:8px;border-radius:6px;border-left:4px solid rgba(255,255,255,0.04)}
+
+    /* footer controls */
+    .controls{display:flex;gap:10px;align-items:center}
+    .pill{background:var(--glass);padding:8px 12px;border-radius:999px;font-size:13px}
+
+    /* ticker */
+    .ticker{height:28px;overflow:hidden;border-radius:6px;padding:4px;background:linear-gradient(90deg,#07111b,#081625);display:flex;align-items:center}
+    .ticker-track{display:inline-block;white-space:nowrap;animation:marquee 24s linear infinite}
+    @keyframes marquee{from{transform:translateX(0%)} to{transform:translateX(-100%)}}
+
+    /* faux video call */
+    .call{height:120px;background:linear-gradient(90deg,#07121a,#072433);border-radius:8px;display:flex;align-items:center;justify-content:center}
+
+    /* big center panel */
+    .big-grid{display:grid;grid-template-columns:1fr 360px;gap:14px}
+    .workspace{height:100%;display:flex;flex-direction:column;gap:12px}
+
+    /* subtle animations */
+    .pulse{animation:pulse 3s ease-in-out infinite}
+    @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(29,185,84,0.18)}50%{box-shadow:0 10px 30px rgba(29,185,84,0.04)}100%{box-shadow:0 0 0 0 rgba(29,185,84,0)}}
+
+    /* responsive */
+    @media (max-width:1100px){.wrap{grid-template-columns:1fr;grid-template-rows:120px 1fr 1fr;}
+      .center,.left,.right{grid-column:1}
+      .big-grid{grid-template-columns:1fr}
+    }
+
+    /* faux busy cursor */
+    .cursor{display:inline-block;width:10px;height:16px;background:#9fd6c9;margin-left:6px;vertical-align:middle;animation:blink 1s steps(2) infinite}
+    @keyframes blink{50%{opacity:0}}
+
+    /* download button */
+    .download{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:8px 12px;border-radius:8px;color:var(--muted)}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="header card">
+      <div class="logo"><div class="mark">DG</div><div><div class="title">Dolphin Digital — Executive Console</div><div class="sub">Realtime Ops • Secure • Priority: Top Secret</div></div></div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <div class="sub">Status: <strong style="color:var(--accent);margin-left:6px">Connected</strong></div>
+        <button class="download" onclick="downloadHTML()">Export HTML</button>
+      </div>
+    </div>
+
+    <div class="left card">
+      <div class="profile"><div class="avatar">You</div><div><div style="font-weight:700">Sir — Chief of Grand Affairs</div><div class="sub">Currently: Reviewing Q4 integrations</div></div></div>
+      <div class="badges"><div class="badge">VPN: active</div><div class="badge">2FA: OK</div><div class="badge">Alerts: 3</div></div>
+
+      <div style="margin-top:12px" class="card">
+        <div style="font-weight:700;margin-bottom:8px">Live Terminal</div>
+        <div class="terminal" id="terminal"></div>
+      </div>
+
+      <div style="margin-top:12px" class="card">
+        <div style="font-weight:700;margin-bottom:8px">Quick Calendar</div>
+        <div style="display:flex;gap:8px;align-items:center"><div style="font-size:28px;font-weight:700">10</div><div><div style="font-weight:700">Nov 2025</div><div class="sub">3 meetings • 1 review</div></div></div>
+      </div>
+    </div>
+
+    <div class="center">
+      <div class="card big-grid">
+        <div class="workspace">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div>
+              <div style="font-weight:700">Operational Dashboard</div>
+              <div class="sub">Simulated metrics and tasks — ideal for snaps</div>
+            </div>
+            <div class="controls">
+              <div class="pill">Build: build-2025.11.08</div>
+              <div class="pill">Uptime: 72 days</div>
+            </div>
+          </div>
+
+          <canvas id="lineChart" class="card chart"></canvas>
+
+          <div class="stat-grid">
+            <div class="stat"><div class="num" id="users">0</div><div class="label">Active Users</div></div>
+            <div class="stat"><div class="num" id="throughput">0</div><div class="label">Throughput (r/s)</div></div>
+            <div class="stat"><div class="num" id="errors">0</div><div class="label">Errors</div></div>
+          </div>
+
+          <div style="display:flex;gap:12px;margin-top:8px">
+            <div style="flex:1">
+              <div style="font-weight:700;margin-bottom:8px">Task Board</div>
+              <div class="kanban">
+                <div class="col"><div style="font-weight:700;margin-bottom:8px">Now</div><div class="card-item">Data pipeline troubleshooting — priority</div><div class="card-item">Auth token patch review</div></div>
+                <div class="col"><div style="font-weight:700;margin-bottom:8px">Next</div><div class="card-item">Deploy feature branch</div><div class="card-item">Audit billing logs</div></div>
+                <div class="col"><div style="font-weight:700;margin-bottom:8px">Later</div><div class="card-item">UX audit</div><div class="card-item">Legal sync</div></div>
+              </div>
+            </div>
+
+            <div style="width:360px">
+              <div style="font-weight:700;margin-bottom:8px">Communications</div>
+              <div class="call">Video: Board — 2 participants <span class="cursor"></span></div>
+
+              <div style="margin-top:10px">
+                <div style="font-weight:700;margin-bottom:6px">Notifications</div>
+                <div class="card-item">[Alert] Payment gateway latency spike — investigating</div>
+                <div class="card-item">[Info] New vendor on-boarding complete</div>
+                <div class="card-item">[Warning] Certificate renews in 7d</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div style="font-weight:700;margin-bottom:8px">Side Console</div>
+          <div class="card" style="margin-bottom:10px">
+            <div style="font-weight:700;margin-bottom:8px">Mini Chart</div>
+            <canvas id="mini" style="height:100px;width:100%"></canvas>
+          </div>
+
+          <div class="ticker card" style="margin-bottom:10px"><div class="ticker-track" id="ticker">NASDAQ: DOLPH  •  +4.2%  •  PAYMENT GATEWAY OK  •  NEW DEPLOY queued  •  ALERTS: 3  &nbsp;&nbsp;&nbsp;</div></div>
+
+          <div class="card">
+            <div style="font-weight:700;margin-bottom:8px">CPU / Mem</div>
+            <div class="sub">CPU <span id="cpu">0%</span> • Mem <span id="mem">0%</span></div>
+            <div style="height:80px;margin-top:8px;background:linear-gradient(90deg,#041022,#071628);border-radius:6px;padding:10px;color:var(--muted);font-size:12px">Processes: 124 • Threads: 432 • DB connections: 67</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="right card">
+      <div style="display:flex;justify-content:space-between;align-items:center"><div style="font-weight:700">Live Feed</div><div class="sub">Simulated</div></div>
+      <div style="margin-top:8px">
+        <div class="card-item">[12:41] SSH: 10.10.22.5 — established</div>
+        <div class="card-item">[12:42] Audit: Payment gateway — latency 420ms</div>
+        <div class="card-item">[12:43] Ops: Scaling replicas +2</div>
+        <div class="card-item">[12:43] R&D: Prototype shipped</div>
+      </div>
+
+      <div style="margin-top:12px" class="card">
+        <div style="font-weight:700;margin-bottom:8px">Quick Notes</div>
+        <div class="sub">Press F11 to go full screen before snapping. Move the windows and hover for subtle animations.</div>
+      </div>
+    </div>
+  </div>
+
+<script>
+// Utilities: simulated data & terminal
+const terminal = document.getElementById('terminal');
+const messages = [
+  'Connecting to internal cluster...','Auth OK — token refreshed','Fetching last 24h traces','Anomaly detector: spike @ payments','Scaling service: payments-svc +2','Deploy: release/v1.14 started','DB backup: snapshot-2025-11-08 saved','Certbot: cert for domain renewed in 7d'
+];
+let tIndex=0;
+function writeLine(){
+  if(tIndex>=messages.length) tIndex=0;
+  const el = document.createElement('div'); el.className='term-line';
+  const time = new Date().toLocaleTimeString();
+  el.innerHTML = `<span style="color:#8da6ff">[${time}]</span> <span class="cmd">${messages[tIndex++]}</span>`;
+  terminal.appendChild(el);
+  terminal.scrollTop = terminal.scrollHeight;
+}
+setInterval(writeLine, 2200);
+writeLine();
+
+// fake metrics
+function rand(min,max){return Math.floor(Math.random()*(max-min+1))+min}
+setInterval(()=>{
+  document.getElementById('users').textContent = rand(4200,9800).toLocaleString();
+  document.getElementById('throughput').textContent = rand(1200,5400);
+  document.getElementById('errors').textContent = rand(0,14);
+  document.getElementById('cpu').textContent = rand(6,82) + '%';
+  document.getElementById('mem').textContent = rand(24,88) + '%';
+},1800);
+
+// canvas charts (vanilla)
+function drawLineChart(){
+  const c = document.getElementById('lineChart');
+  const ctx = c.getContext('2d');
+  function resize(){ c.width = c.clientWidth; c.height = c.clientHeight; }
+  resize(); window.addEventListener('resize',resize);
+  let data = Array.from({length:40},()=>rand(200,900));
+  function render(){
+    ctx.clearRect(0,0,c.width,c.height);
+    // background grid
+    ctx.strokeStyle = 'rgba(255,255,255,0.03)'; ctx.lineWidth=1;
+    for(let i=0;i<6;i++){ ctx.beginPath(); ctx.moveTo(0,(c.height/6)*i); ctx.lineTo(c.width,(c.height/6)*i); ctx.stroke(); }
+    // path
+    ctx.beginPath(); ctx.lineWidth=3; ctx.strokeStyle='rgba(29,185,84,0.95)';
+    data.forEach((v,i)=>{ const x = (c.width/(data.length-1))*i; const y = c.height - ((v-100)/800)*c.height; if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y); }); ctx.stroke();
+    // fill
+    const grad = ctx.createLinearGradient(0,0,0,c.height); grad.addColorStop(0,'rgba(29,185,84,0.14)'); grad.addColorStop(1,'rgba(11,18,30,0)'); ctx.fillStyle=grad; ctx.lineTo(c.width,c.height); ctx.lineTo(0,c.height); ctx.closePath(); ctx.fill();
+    // markers
+    ctx.fillStyle = 'rgba(255,255,255,0.06)'; data.slice(-3).forEach((v,i)=>{ const idx = data.length-3+i; const x=(c.width/(data.length-1))*idx; const y=c.height-((v-100)/800)*c.height; ctx.beginPath(); ctx.arc(x,y,4,0,Math.PI*2); ctx.fill(); });
+  }
+  setInterval(()=>{ data.shift(); data.push(rand(200,980)); render(); },900);
+  render();
+}
+
+drawLineChart();
+
+function drawMini(){
+  const c = document.getElementById('mini'); const ctx=c.getContext('2d'); function resize(){ c.width=c.clientWidth; c.height=c.clientHeight;} resize(); window.addEventListener('resize',resize);
+  let d = Array.from({length:30},()=>rand(20,100)); function render(){ ctx.clearRect(0,0,c.width,c.height); ctx.beginPath(); ctx.moveTo(0,c.height); d.forEach((v,i)=>{ const x=(c.width/(d.length-1))*i; const y=c.height-(v/120)*c.height; ctx.lineTo(x,y); }); ctx.lineTo(c.width,c.height); ctx.closePath(); ctx.fillStyle='rgba(255,255,255,0.03)'; ctx.fill(); }
+  setInterval(()=>{ d.shift(); d.push(rand(20,120)); render(); },700); render();
+}
+
+drawMini();
+
+// ticker dynamic text
+const T = document.getElementById('ticker'); const tickItems = ['NASDAQ: DOLPH +4.2%','PAYMENTS: latency 420ms','DEPLOY: release/v1.14 queued','ALERTS: 3 open','DB: backup OK','CERT: renew in 7d'];
+setInterval(()=>{ tickItems.push(tickItems.shift()); T.textContent = tickItems.join('  •  ') + '  \u00A0\u00A0\u00A0'; }, 4000);
+
+// download function
+function downloadHTML(){
+  const blob = new Blob([document.documentElement.outerHTML],{type:'text/html'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'excuse_to_look_busy.html'; document.body.appendChild(a); a.click(); a.remove();
+}
+
+// small interactive hover
+document.querySelectorAll('.card-item').forEach(e=>{ e.addEventListener('mouseover',()=>{ e.style.transform='translateX(6px)'; e.style.transition='transform 0.18s'; }); e.addEventListener('mouseout',()=>{ e.style.transform='translateX(0)'; }); });
+</script>
+</body>
+</html>
