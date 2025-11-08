@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Corporate Command Center</title>
+<style>
+  body {
+    background: #0b0e14;
+    color: #00ffea;
+    font-family: 'Consolas', monospace;
+    margin: 0;
+    overflow: hidden;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 8px;
+    height: 100vh;
+    padding: 8px;
+  }
+  .widget {
+    background: #10141f;
+    border: 1px solid #1f2a40;
+    border-radius: 6px;
+    box-shadow: 0 0 8px rgba(0,255,255,0.1);
+    overflow: hidden;
+    position: relative;
+    padding: 8px;
+  }
+  .widget h3 {
+    font-size: 0.9em;
+    color: #00b8ff;
+    margin: 0 0 6px 0;
+  }
+  .terminal {
+    font-size: 0.75em;
+    height: 100%;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    line-height: 1.4em;
+  }
+  .chart {
+    width: 100%;
+    height: 90%;
+    background: repeating-linear-gradient(0deg, #0d1118, #0d1118 2px, #121826 2px, #121826 4px);
+    position: relative;
+  }
+  .bar {
+    position: absolute;
+    bottom: 0;
+    width: 8px;
+    background: #00ffaa;
+    animation: barAnim 1.5s infinite ease-in-out;
+  }
+  @keyframes barAnim {
+    0% { height: 20%; }
+    50% { height: 95%; }
+    100% { height: 20%; }
+  }
+  .ticker {
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    position: absolute;
+    bottom: 0;
+    background: #000;
+    color: #00ffaa;
+    font-size: 0.8em;
+  }
+  .ticker span {
+    display: inline-block;
+    padding-right: 50px;
+    animation: tickerAnim 20s linear infinite;
+  }
+  @keyframes tickerAnim {
+    0% { transform: translateX(100%); }
+    100% { transform: translateX(-100%); }
+  }
+  .notification {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: rgba(0,255,255,0.1);
+    border: 1px solid #00ffaa;
+    padding: 5px 10px;
+    font-size: 0.75em;
+    color: #00ffaa;
+    animation: fadeInOut 5s linear infinite;
+  }
+  @keyframes fadeInOut {
+    0%,100% { opacity: 0; }
+    10%,90% { opacity: 1; }
+  }
+</style>
+</head>
+<body>
+<div class="grid" id="dashboard"></div>
+<script>
+  const dashboard = document.getElementById('dashboard');
+
+  function makeTerminalWidget(title) {
+    const w = document.createElement('div');
+    w.className = 'widget';
+    w.innerHTML = `<h3>${title}</h3><div class='terminal'></div>`;
+    const t = w.querySelector('.terminal');
+    setInterval(()=>{
+      const line = `[${new Date().toLocaleTimeString()}] Executed task ${Math.floor(Math.random()*9999)} — status OK\n`;
+      t.textContent += line;
+      t.scrollTop = t.scrollHeight;
+    }, 400);
+    return w;
+  }
+
+  function makeChartWidget(title) {
+    const w = document.createElement('div');
+    w.className = 'widget';
+    w.innerHTML = `<h3>${title}</h3><div class='chart'></div>`;
+    const chart = w.querySelector('.chart');
+    for(let i=0;i<30;i++) {
+      const bar = document.createElement('div');
+      bar.className = 'bar';
+      bar.style.left = `${i*10}px`;
+      bar.style.animationDelay = `${Math.random()*1.5}s`;
+      chart.appendChild(bar);
+    }
+    return w;
+  }
+
+  function makeTickerWidget() {
+    const w = document.createElement('div');
+    w.className = 'widget';
+    w.innerHTML = `<div class='ticker'><span>${Array(20).fill(0).map(()=>`CORP${Math.floor(Math.random()*900)} ▲${(Math.random()*10).toFixed(2)}%`).join(' | ')}</span></div>`;
+    return w;
+  }
+
+  function makeNotificationWidget() {
+    const w = document.createElement('div');
+    w.className = 'widget';
+    w.innerHTML = `<h3>System Alerts</h3><div class='notification'>ALERT: Server ${Math.floor(Math.random()*90)} Response Delay</div>`;
+    setInterval(()=>{
+      const note = w.querySelector('.notification');
+      note.textContent = `ALERT: Server ${Math.floor(Math.random()*90)} CPU Spike`; 
+    }, 6000);
+    return w;
+  }
+
+  const widgets = [
+    makeTerminalWidget('Server Logs'),
+    makeTerminalWidget('Data Sync Operations'),
+    makeChartWidget('Network Load Analysis'),
+    makeChartWidget('Market Projections'),
+    makeTickerWidget(),
+    makeNotificationWidget(),
+    makeTerminalWidget('AI Model Training Status'),
+    makeChartWidget('Sales Growth Simulation'),
+    makeTerminalWidget('API Request Monitor'),
+    makeTickerWidget(),
+    makeNotificationWidget(),
+    makeChartWidget('Infrastructure Scaling Overview')
+  ];
+
+  widgets.forEach(w => dashboard.appendChild(w));
+</script>
+</body>
+</html>
